@@ -1,7 +1,6 @@
-# Environment variables
+# Development
 .env
 .env.local
-.env.*.local
 
 # Python
 __pycache__/
@@ -44,3 +43,7 @@ env/
 
 # Logs
 *.log
+
+# Flask
+instance/
+.webassets-cache/
