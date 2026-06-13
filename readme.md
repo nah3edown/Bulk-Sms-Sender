@@ -2,6 +2,10 @@
 
 Telegram bot + Web Dashboard connected with SMS.NET.BD API for sending SMS messages.
 
+## 🚀 Quick Deploy
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/nah3edown/Bulk-Sms-Sender)
+
 ## Features
 
 - 📱 Send single SMS messages via Telegram or Web
@@ -25,7 +29,7 @@ Telegram bot + Web Dashboard connected with SMS.NET.BD API for sending SMS messa
 
 ```bash
 # Clone repository
-git clone <your-repo-url>
+git clone https://github.com/nah3edown/Bulk-Sms-Sender.git
 cd Bulk-Sms-Sender
 
 # Create virtual environment
@@ -51,6 +55,8 @@ python bot.py
 The bot will:
 - Start polling Telegram for messages
 - Start Flask web server on http://localhost:5000
+
+Access the web dashboard at: **http://localhost:5000**
 
 ## Usage
 
@@ -83,7 +89,7 @@ The bot will:
 
 ### Via Web Dashboard
 
-Access at: `http://localhost:5000`
+Access at: `http://localhost:5000` or `https://your-render-app.onrender.com`
 
 **Features:**
 - 📤 **Single SMS Tab** - Send to one number
@@ -114,7 +120,7 @@ Or with one number per line:
 
 ## Environment Variables
 
-Create `.env` file:
+Create `.env` file or set in your hosting platform:
 
 ```env
 BOT_TOKEN=your_telegram_bot_token_here
@@ -126,31 +132,40 @@ PORT=5000
 **Get these values:**
 - `BOT_TOKEN`: Talk to @BotFather on Telegram
 - `SMS_API_KEY`: From SMS.NET.BD dashboard
-- `ADMIN_IDS`: Your Telegram user ID(s)
+- `ADMIN_IDS`: Your Telegram user ID(s) (comma-separated)
 - `PORT`: (Optional) Default is 5000
 
 ## Deployment
 
-### Deploy on Render
+### Option 1: Deploy on Render (Recommended)
 
-1. Push to GitHub
-2. Create Render Background Worker
-3. Connect your repository
-4. Add Environment Variables:
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/nah3edown/Bulk-Sms-Sender)
+
+Or manually:
+
+1. Go to [Render.com](https://render.com)
+2. Click "New +" → "Background Worker"
+3. Connect your GitHub repository
+4. Set environment variables:
    - `BOT_TOKEN`
    - `SMS_API_KEY`
    - `ADMIN_IDS`
-   - `PORT` (optional, defaults to 5000)
-5. Deploy
+5. Deploy!
 
-### Deploy on Other Platforms
+### Option 2: Deploy on Other Platforms
 
-This works on any platform supporting Python:
-- Railway.app
-- PythonAnywhere
-- Heroku (paid)
-- AWS, Google Cloud, Azure
-- Your own VPS
+Works on any platform supporting Python:
+- **Railway.app** - Simple, free tier available
+- **PythonAnywhere** - Beginner-friendly
+- **AWS, Google Cloud, Azure** - Enterprise options
+- **Your own VPS** - Full control
+
+### Option 3: Run Locally 24/7
+
+Keep your computer on and run:
+```bash
+python bot.py
+```
 
 ## Project Structure
 
@@ -159,10 +174,11 @@ Bulk-Sms-Sender/
 ├── bot.py                 # Main Flask + Telegram app
 ├── templates/
 │   └── index.html         # Web dashboard
-├── downloads/             # Uploaded files
+├── downloads/             # Uploaded files (auto-created)
 ├── .env.example           # Environment template
+├── .env                   # Your credentials (not tracked)
 ├── Requirement.txt        # Python dependencies
-├── Render.yaml           # Render.com config
+├── Render.yaml           # Render.com configuration
 ├── .gitignore            # Git ignore rules
 └── readme.md             # This file
 ```
@@ -194,33 +210,36 @@ Bulk-Sms-Sender/
 
 ### Web dashboard not loading
 - Verify Flask is installed: `pip install Flask`
-- Check port 5000 is available
+- Check port 5000 is available or set different PORT
 - Try different port: set `PORT=8000` in .env
 
 ### SMS not sending
 - Verify `SMS_API_KEY` is correct
 - Check SMS.NET.BD account balance
-- Verify phone numbers format (88017XXXXXXXX)
+- Verify phone numbers format (88017XXXXXXXX for Bangladesh)
 - Check SMS API response in logs
 
 ### File upload fails
 - File must be CSV or TXT
 - Max file size: 16MB
 - Check phone number format in file
+- One number per line or comma-separated
 
 ## Tips
 
 - Use `/listnumbers` to preview numbers before sending
 - Test with single SMS first before bulk
-- Keep admin IDs private and secure
-- Monitor SMS balance regularly
-- Save important SMS logs
+- Keep admin IDs and credentials private and secure
+- Monitor SMS balance regularly with `/balance`
+- Save important SMS logs for your records
+- Test locally before deploying to production
 
 ## Support
 
 - **SMS.NET.BD**: [sms.net.bd](https://sms.net.bd)
 - **Telegram Bot API**: [core.telegram.org/bots](https://core.telegram.org/bots)
 - **Flask Docs**: [flask.palletsprojects.com](https://flask.palletsprojects.com)
+- **Render Docs**: [render.com/docs](https://render.com/docs)
 
 ## License
 
@@ -230,6 +249,34 @@ MIT License - Free to use and modify
 
 Feel free to fork, modify, and improve!
 
+## How to Get Your Credentials
+
+### 1. Telegram Bot Token
+- Open Telegram and search for @BotFather
+- Send `/start` then `/newbot`
+- Follow the instructions
+- Copy your BOT_TOKEN
+
+### 2. SMS.NET.BD API Key
+- Visit [SMS.NET.BD](https://sms.net.bd)
+- Create account and verify
+- Go to API settings
+- Copy your API_KEY
+
+### 3. Your Admin ID
+- Send a message to your bot
+- Check bot logs to see your user ID
+- Or use `/start` and check the logs
+
+## Changelog
+
+- **v1.0** - Initial release with Telegram bot + Web dashboard
+- Added file upload functionality
+- Added web dashboard with Flask
+- Multi-admin support
+
 ---
 
 **Made with ❤️ for bulk SMS management**
+
+Questions? Issues? Feel free to open an issue on GitHub!
