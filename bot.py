@@ -4,6 +4,7 @@ import requests
 from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 import threading
+from dotenv import load_dotenv
 
 from telegram import Update
 from telegram.ext import (
@@ -13,6 +14,9 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+
+# Load environment variables
+load_dotenv()
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -56,11 +60,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "✅ SMS Bot Online\n\n"
-        "/send <number> <message>\n"
-        "/bulk <number1,number2> <message>\n"
-        "/upload - Upload CSV/TXT file with numbers\n"
-        "/balance\n\n"
-        "Or use the web dashboard: /dashboard"
+        "📱 /send <number> <message>\n"
+        "📢 /bulk <number1,number2> <message>\n"
+        "📁 /upload - Upload CSV/TXT file\n"
+        "📤 /sendfile <message>\n"
+        "📋 /listnumbers\n"
+        "💰 /balance\n\n"
+        "Or use the web dashboard!"
     )
 
 
@@ -111,11 +117,11 @@ async def send(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         await update.message.reply_text(
-            f"SMS Response:\n{response.text}"
+            f"✅ SMS sent!\nResponse: {response.text}"
         )
 
     except Exception as e:
-        await update.message.reply_text(str(e))
+        await update.message.reply_text(f"❌ Error: {str(e)}")
 
 
 async def bulk(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -146,11 +152,11 @@ async def bulk(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         await update.message.reply_text(
-            f"Bulk SMS Response:\n{response.text}"
+            f"✅ Bulk SMS sent!\nResponse: {response.text}"
         )
 
     except Exception as e:
-        await update.message.reply_text(str(e))
+        await update.message.reply_text(f"❌ Error: {str(e)}")
 
 
 async def upload_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -160,8 +166,12 @@ async def upload_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "📁 Please send a CSV or TXT file with phone numbers\n\n"
         "File format:\n"
-        "• CSV: One phone number per line or comma-separated\n"
-        "• TXT: One phone number per line"
+        "• CSV: One per line or comma-separated\n"
+        "• TXT: One per line\n\n"
+        "Example:\n"
+        "88017XXXXXXXX\n"
+        "88018XXXXXXXX\n"
+        "88019XXXXXXXX"
     )
 
 
@@ -190,14 +200,13 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['file_name'] = document.file_name
 
         await update.message.reply_text(
-            f"✅ File uploaded successfully!\n\n"
+            f"✅ File uploaded!\n"
             f"Found {len(phone_numbers)} phone numbers\n\n"
-            f"Now send the message you want to send:\n"
-            f"Example: /sendfile Your message here"
+            f"Send message: /sendfile Your message"
         )
 
     except Exception as e:
-        await update.message.reply_text(f"❌ Error processing file: {str(e)}")
+        await update.message.reply_text(f"❌ Error: {str(e)}")
 
 
 def parse_phone_numbers(file_path: str) -> list:
@@ -226,11 +235,11 @@ async def sendfile_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if 'phone_numbers' not in context.user_data:
-        await update.message.reply_text("❌ No file uploaded yet. Use /upload first")
+        await update.message.reply_text("❌ No file uploaded. Use /upload first")
         return
 
     if len(context.args) < 1:
-        await update.message.reply_text("Usage:\n/sendfile Your message here")
+        await update.message.reply_text("Usage: /sendfile Your message here")
         return
 
     phone_numbers = context.user_data['phone_numbers']
@@ -251,7 +260,7 @@ async def sendfile_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         await update.message.reply_text(
-            f"✅ SMS sent to {len(phone_numbers)} numbers\n\n"
+            f"✅ SMS sent to {len(phone_numbers)} numbers!\n"
             f"Response: {response.text}"
         )
 
@@ -474,6 +483,7 @@ if __name__ == "__main__":
     bot_thread = threading.Thread(target=run_bot, daemon=True)
     bot_thread.start()
 
-    # Run Flask app on port 5000
+    # Run Flask app
     port = int(os.getenv("PORT", 5000))
+    print(f"🌐 Web Dashboard: http://localhost:{port}")
     app.run(host='0.0.0.0', port=port, debug=False)
