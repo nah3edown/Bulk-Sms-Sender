@@ -3,7 +3,7 @@ services:
     name: telegram-sms-bot
     env: python
 
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r Requirement.txt
     startCommand: python bot.py
 
     envVars:
