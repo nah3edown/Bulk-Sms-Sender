@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Bot Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 .icon {
+            font-size: 1.3em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .file-input-label:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .file-input-wrapper input[type="file"]:focus + .file-input-label {
+            border-color: #764ba2;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-box .label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-box .value {
+            color: #667eea;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .uploaded-info {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .uploaded-info.show {
+            display: block;
+        }
+
+        .uploaded-info h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .preview-list {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.9em;
+        }
+
+        .preview-list p {
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            margin: 15px 0;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            grid-column: 1 / -1;
+        }
+
+        .balance-card h2 {
+            color: white;
+        }
+
+        .balance-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            background: none;
+            padding: 12px 20px;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #666;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: auto;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 SMS Bot Dashboard</h1>
+            <p>Send SMS directly from your browser</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('single')">Single SMS</button>
+            <button class="tab-btn" onclick="switchTab('bulk')">Bulk SMS</button>
+            <button class="tab-btn" onclick="switchTab('file')">Upload File</button>
+            <button class="tab-btn" onclick="switchTab('balance')">Balance</button>
+        </div>
+
+        <div class="content">
+            <!-- Single SMS Tab -->
+            <div id="single" class="tab-content active" style="grid-column: 1 / -1;">
+                <div class="card">
+                    <h2><span class="icon">📤</span> Send Single SMS</h2>
+                    <div id="singleAlert" class="alert"></div>
+                    
+                    <div class="form-group">
+                        <label for="singleNumber">Phone Number</label>
+                        <input type="text" id="singleNumber" placeholder="88017XXXXXXXX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="singleMessage">Message</label>
+                        <textarea id="singleMessage" placeholder="Enter your message here..."></textarea>
+                    </div>
+
+                    <div class="loading" id="singleLoading">
+                        <div class="spinner"></div>
+                        <p>Sending SMS...</p>
+                    </div>
+
+                    <button onclick="sendSingle()">Send SMS</button>
+                </div>
+            </div>
+
+            <!-- Bulk SMS Tab -->
+            <div id="bulk" class="tab-content" style="grid-column: 1 / -1;">
+                <div class="card">
+                    <h2><span class="icon">📢</span> Send Bulk SMS (Direct)</h2>
+                    <div id="bulkAlert" class="alert"></div>
+                    
+                    <div class="form-group">
+                        <label for="bulkNumbers">Phone Numbers (comma-separated)</label>
+                        <textarea id="bulkNumbers" placeholder="88017XXXXXXXX,88018XXXXXXXX,88019XXXXXXXX"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bulkMessage">Message</label>
+                        <textarea id="bulkMessage" placeholder="Enter your message here..."></textarea>
+                    </div>
+
+                    <div class="loading" id="bulkLoading">
+                        <div class="spinner"></div>
+                        <p>Sending SMS to multiple numbers...</p>
+                    </div>
+
+                    <button onclick="sendBulk()">Send Bulk SMS</button>
+                </div>
+            </div>
+
+            <!-- File Upload Tab -->
+            <div id="file" class="tab-content" style="grid-column: 1 / -1;">
+                <div class="card">
+                    <h2><span class="icon">📁</span> Upload CSV/TXT File</h2>
+                    <div id="fileAlert" class="alert"></div>
+
+                    <div class="form-group">
+                        <label>Upload File (CSV or TXT)</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="fileInput" accept=".csv,.txt" onchange="handleFileSelect()">
+                            <label for="fileInput" class="file-input-label">
+                                📎 Click to select or drag file here
+                            </label>
+                        </div>
+                        <small style="color: #666; display: block; margin-top: 8px;">
+                            Supported formats: CSV, TXT (one number per line)
+                        </small>
+                    </div>
+
+                    <div class="loading" id="fileLoading">
+                        <div class="spinner"></div>
+                        <p>Uploading file...</p>
+                    </div>
+
+                    <div id="uploadedInfo" class="uploaded-info">
+                        <h4>📄 File Information</h4>
+                        <div class="stats">
+                            <div class="stat-box">
+                                <div class="label">Filename</div>
+                                <div class="value" id="uploadedFilename" style="font-size: 1em; color: #333;">-</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="label">Total Numbers</div>
+                                <div class="value" id="uploadedCount">0</div>
+                            </div>
+                        </div>
+                        <h4>Preview (first 10)</h4>
+                        <div class="preview-list" id="previewList"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2><span class="icon">✉️</span> Send to Uploaded Numbers</h2>
+                    <div id="sendFileAlert" class="alert"></div>
+
+                    <div class="form-group">
+                        <label for="fileMessage">Message</label>
+                        <textarea id="fileMessage" placeholder="Enter your message here..."></textarea>
+                    </div>
+
+                    <div class="loading" id="sendFileLoading">
+                        <div class="spinner"></div>
+                        <p>Sending SMS to all numbers...</p>
+                    </div>
+
+                    <button onclick="sendToFile()">Send to All Numbers</button>
+                </div>
+            </div>
+
+            <!-- Balance Tab -->
+            <div id="balance" class="tab-content" style="grid-column: 1 / -1;">
+                <div class="card">
+                    <h2><span class="icon">💰</span> Check Balance</h2>
+                    <div id="balanceAlert" class="alert"></div>
+
+                    <div class="loading" id="balanceLoading">
+                        <div class="spinner"></div>
+                        <p>Fetching balance...</p>
+                    </div>
+
+                    <button onclick="getBalance()">Get Balance</button>
+                    
+                    <div id="balanceInfo" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 6px; display: none;">
+                        <p style="color: #666; margin-bottom: 10px;"><strong>Balance Response:</strong></p>
+                        <pre id="balanceResponse" style="background: white; padding: 15px; border-radius: 4px; overflow-x: auto; max-height: 300px;"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showAlert(elementId, message, type) {
+            const alert = document.getElementById(elementId);
+            alert.textContent = message;
+            alert.className = `alert show alert-${type}`;
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        function showLoading(elementId, show = true) {
+            const loading = document.getElementById(elementId);
+            if (show) {
+                loading.classList.add('show');
+            } else {
+                loading.classList.remove('show');
+            }
+        }
+
+        // Single SMS
+        async function sendSingle() {
+            const number = document.getElementById('singleNumber').value.trim();
+            const message = document.getElementById('singleMessage').value.trim();
+
+            if (!number || !message) {
+                showAlert('singleAlert', '❌ Please enter both number and message', 'error');
+                return;
+            }
+
+            showLoading('singleLoading', true);
+
+            try {
+                const response = await fetch('/api/send-single', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ number, message })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('singleAlert', '✅ SMS sent successfully!', 'success');
+                    document.getElementById('singleNumber').value = '';
+                    document.getElementById('singleMessage').value = '';
+                } else {
+                    showAlert('singleAlert', `❌ Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showAlert('singleAlert', `❌ Error: ${error.message}`, 'error');
+            } finally {
+                showLoading('singleLoading', false);
+            }
+        }
+
+        // Bulk SMS
+        async function sendBulk() {
+            const numbers = document.getElementById('bulkNumbers').value.trim();
+            const message = document.getElementById('bulkMessage').value.trim();
+
+            if (!numbers || !message) {
+                showAlert('bulkAlert', '❌ Please enter both numbers and message', 'error');
+                return;
+            }
+
+            showLoading('bulkLoading', true);
+
+            try {
+                const response = await fetch('/api/send-bulk', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ numbers, message })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('bulkAlert', `✅ ${data.message}`, 'success');
+                    document.getElementById('bulkNumbers').value = '';
+                    document.getElementById('bulkMessage').value = '';
+                } else {
+                    showAlert('bulkAlert', `❌ Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showAlert('bulkAlert', `❌ Error: ${error.message}`, 'error');
+            } finally {
+                showLoading('bulkLoading', false);
+            }
+        }
+
+        // File Upload
+        async function handleFileSelect() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) return;
+
+            showLoading('fileLoading', true);
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('fileAlert', `✅ ${data.message} (${data.count} numbers)`, 'success');
+                    updateUploadedInfo();
+                } else {
+                    showAlert('fileAlert', `❌ Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showAlert('fileAlert', `❌ Error: ${error.message}`, 'error');
+            } finally {
+                showLoading('fileLoading', false);
+            }
+        }
+
+        async function updateUploadedInfo() {
+            try {
+                const response = await fetch('/api/get-uploaded');
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('uploadedFilename').textContent = data.filename;
+                    document.getElementById('uploadedCount').textContent = data.count;
+
+                    const previewHtml = data.preview.map(num => `<p>${num}</p>`).join('');
+                    let previewText = previewHtml;
+                    if (data.remaining > 0) {
+                        previewText += `<p style="color: #999; font-style: italic;">... and ${data.remaining} more</p>`;
+                    }
+                    document.getElementById('previewList').innerHTML = previewText;
+
+                    document.getElementById('uploadedInfo').classList.add('show');
+                }
+            } catch (error) {
+                console.error('Error fetching uploaded info:', error);
+            }
+        }
+
+        async function sendToFile() {
+            const message = document.getElementById('fileMessage').value.trim();
+
+            if (!message) {
+                showAlert('sendFileAlert', '❌ Please enter a message', 'error');
+                return;
+            }
+
+            showLoading('sendFileLoading', true);
+
+            try {
+                const response = await fetch('/api/send-file', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('sendFileAlert', `✅ ${data.message}`, 'success');
+                    document.getElementById('fileMessage').value = '';
+                } else {
+                    showAlert('sendFileAlert', `❌ Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showAlert('sendFileAlert', `❌ Error: ${error.message}`, 'error');
+            } finally {
+                showLoading('sendFileLoading', false);
+            }
+        }
+
+        // Balance
+        async function getBalance() {
+            showLoading('balanceLoading', true);
+
+            try {
+                const response = await fetch('/api/get-balance');
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('balanceAlert', '✅ Balance fetched successfully', 'success');
+                    document.getElementById('balanceResponse').textContent = data.balance;
+                    document.getElementById('balanceInfo').style.display = 'block';
+                } else {
+                    showAlert('balanceAlert', `❌ Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showAlert('balanceAlert', `❌ Error: ${error.message}`, 'error');
+            } finally {
+                showLoading('balanceLoading', false);
+            }
+        }
+
+        // Drag and drop for file input
+        const fileInput = document.getElementById('fileInput');
+        const fileLabel = document.querySelector('.file-input-label');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileLabel.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileLabel.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileLabel.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            fileLabel.style.background = '#667eea';
+            fileLabel.style.color = 'white';
+        }
+
+        function unhighlight(e) {
+            fileLabel.style.background = '#f8f9fa';
+            fileLabel.style.color = '#667eea';
+        }
+
+        fileLabel.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            handleFileSelect();
+        }
+    </script>
+</body>
+</html>
